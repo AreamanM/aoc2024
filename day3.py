@@ -12,26 +12,24 @@ def parse(f) -> str:
 
 
 def part1(mem: str) -> int:
-    muls = re.compile(r"mul\(\d{1,3},\d{1,3}\)")
-    nums = re.compile(r"\d{1,3}")
+    muls = re.compile(r"mul\((\d{1,3}),(\d{1,3})\)")
 
     total = 0
-    for match in muls.findall(mem):
-        total += functools.reduce(operator.mul, map(int, nums.findall(match)))
+    for match in muls.finditer(mem):
+        total += int(match.group(1)) * int(match.group(2))
     return total
 
 
 def part2(mem: str) -> int:
     # giga because this giga regular expression matches everything I need
-    giga = re.compile(r"don't\(\)|do\(\)|mul\(\d{1,3},\d{1,3}\)")
-    nums = re.compile(r"\d{1,3}")
+    giga = re.compile(r"don't\(\)|do\(\)|mul\((\d{1,3}),(\d{1,3})\)")
 
     total = 0
     do_mul = True
-    for m in giga.findall(mem):
-        if do_mul and m.startswith("mul"):
-            total += functools.reduce(operator.mul, map(int, nums.findall(m)))
-        elif m == "do()":
+    for m in giga.finditer(mem):
+        if do_mul and m.group(0).startswith("mul"):
+            total += int(m.group(1)) * int(m.group(2))
+        elif m.group(0) == "do()":
             do_mul = True
         else:
             do_mul = False
