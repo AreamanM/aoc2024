@@ -40,6 +40,7 @@ def search(
     if b.get(c, "-") == l[0]:
         return search(
                 b, (c[0] + d[0], c[1] + d[1]), d, l[1:]) if len(l) > 1 else True
+    return False
 
 
 board = parse(f)
