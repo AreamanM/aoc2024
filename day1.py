@@ -27,7 +27,7 @@ def part1(left: list[int], right: list[int]):
 
 def part2(left: list[int], right: list[int]):
     sim_score = 0 
-    counts = {}
+    counts: dict[int, int] = {}
     for n in right:
         counts[n] = counts.get(n, 0) + 1
     for n in left:

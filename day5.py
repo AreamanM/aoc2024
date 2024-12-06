@@ -5,7 +5,7 @@ import itertools
 
 f = open("inputs/day5.input")
 
-type Rules = collections.defaultdict[int, set[str]]
+type Rules = collections.defaultdict[str, set[str]]
 type Updates = list[list[str]]
 type Parsed = tuple[Rules, Updates]
 
@@ -18,7 +18,7 @@ def parse(f) -> Parsed:
         before, after = rule.split("|")
         rules[before].add(after)
 
-    updates = [[] for _ in updates_section.split("\n")]
+    updates: list[list[str]] = [[] for _ in updates_section.split("\n")]
     for i, update in enumerate(updates_section.split("\n")):
         for page in update.split(","):
             updates[i].append(page)
@@ -29,7 +29,7 @@ def parse(f) -> Parsed:
 def part1(rules: Rules, updates: Updates) -> int:
     res = 0
     for update in updates:
-        prev = set()
+        prev: set[str] = set()
         for page_num in update:
             if prev.intersection(rules[page_num]):
                 break
@@ -43,14 +43,13 @@ def part1(rules: Rules, updates: Updates) -> int:
 def part2(rules: Rules, updates: Updates) -> int:
     res = 0
     for update in updates:
-        prev = set()
-        bad_pages = set()
+        prev: set[str] = set()
         for page_num in update:
             # update is bad
             if prev.intersection(rules[page_num]):
                 # element A > element B if B|A => A (is a member of) rules[B]
-                update.sort(key=functools.cmp_to_key(
-                                    lambda a, b:  1 if a in rules[b] else -1))
+                update.sort(
+                    key=functools.cmp_to_key(lambda a, b:  1 if a in rules[b] else -1)) # type: ignore
                 res += int(update[len(update) // 2])
                 break
             prev.add(page_num)
